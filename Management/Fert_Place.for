@@ -46,6 +46,7 @@ C=======================================================================
 !     ------------------------------------------------------------------
       USE FertType_mod
       USE ModuleData
+      USE pdi
 
       IMPLICIT  NONE
       SAVE
@@ -354,6 +355,11 @@ C-----------------------------------------------------------------------
         NIDATA % NIEND = YRDOY
       ENDIF
 
+      print * , 'DSSAT->NFERT val: ', NFERT ! EJPG TMP
+      print * , 'DSSAT->IFERI val: ', IFERI ! EJPG TMP
+      CALL PDI_expose("nfert", NFERT, PDI_OUT) ! EJPG: test PDI data exposure
+      CALL PDI_expose("iferi", IFERI, PDI_OUT) ! EJPG: test PDI data exposure
+
       FertLoop: DO I = 1, NFERT
         FERTILIZE_TODAY = .FALSE.
 !       ------------------------------------------------------------------
@@ -391,6 +397,9 @@ C       Convert character codes for fertilizer method into integer
         CALL FERTILIZERTYPE (ISWITCH,
      &    ANFER(I), APFER(I), AKFER(I), FERTYPE, FERTYPE_CDE(I), !Input
      &    HASN, HASP, HASK, HASUI, HASNI, HASCR)                 !Output
+
+        print * , 'DSSAT->HASN val: ', HASN ! EJPG TMP
+        CALL PDI_expose("hasn", HASN, PDI_OUT)
 
         IF (HASN) THEN    !Do this only if NOT slow release
 !         Set the amount of N to be applied and sum total amount of

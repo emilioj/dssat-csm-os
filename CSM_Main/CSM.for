@@ -82,6 +82,8 @@ C=======================================================================
       USE ModuleDefs 
       USE ModuleData
       USE HeaderMod
+      Use paraconf
+      Use pdi
 
       IMPLICIT NONE
 C-----------------------------------------------------------------------
@@ -118,6 +120,9 @@ C     The variable "CONTROL" is of type "ControlType".
 
 C     The variable "ISWITCH" is of type "SwitchType".
       TYPE (SwitchType) ISWITCH
+
+C     To load PDI specification tree from a YAML file
+      TYPE(PC_tree_t),target :: conf
 
 !C-----------------------------------------------------------------------
 
@@ -248,6 +253,12 @@ C-----------------------------------------------------------------------
       RUN   = 0
       REPNO = 1
       CONTROL % REPNO = REPNO
+
+C-----------------------------------------------------------------------
+C    Initialize PDI stuff
+C-----------------------------------------------------------------------
+      CALL PC_parse_path("dssat-pdi.yml", conf)
+      CALL PDI_init(conf)
 
 C*********************************************************************** 
 C*********************************************************************** 
@@ -595,6 +606,13 @@ C-----------------------------------------------------------------------
       CALL OPNAMES(FNAME)
 
       CALL RUNLIST(CONTROL)
+
+C-----------------------------------------------------------------------
+C     Finialize PDI stuff
+C-----------------------------------------------------------------------
+
+      CALL PDI_finalize()
+      CALL PC_tree_destroy(conf)
 
       END PROGRAM CSM 
 

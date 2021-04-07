@@ -1,0 +1,10 @@
+logging:
+  level: debug
+
+data:
+  nfert: int
+  iferi: char
+  hasn: logical
+
+plugins:
+  trace: ~
