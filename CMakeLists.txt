@@ -13,7 +13,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
    						"CMakeCache.txt and CMakeFiles\n")
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 
-PROJECT(DSSAT-CSM Fortran)
+PROJECT(DSSAT-CSM C Fortran)
 
 ##########################################################################################
 # DSSAT_VERSION
@@ -615,6 +615,16 @@ set(
         "Weather/WTHMOD.for"
 )
 ADD_EXECUTABLE(${EXECUTABLE_NAME} ${source_list})
+
+FIND_PACKAGE(paraconf COMPONENTS f90)
+FIND_PACKAGE(PDI COMPONENTS f90)
+
+# Avoid static linking as PDI only supports dynamic
+# Originaly:
+# CMAKE_EXE_LINKER_FLAGS:STRING= -static -static-libgcc -static-libgfortran
+SET(CMAKE_EXE_LINKER_FLAGS "")
+
+TARGET_LINK_LIBRARIES(${EXECUTABLE_NAME} PDI::PDI_f90)
 
 foreach(source IN LISTS source_list)
     get_filename_component(source_path "${source}" PATH)
