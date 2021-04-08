@@ -1,3 +1,82 @@
+# DSSAT + PDI proof of concept
+
+I am setting up the cmake project like this:
+(PDI was installed in /opt/pdi)
+
+    CMAKE_BUILD_TYPE                 DEBUG
+    CMAKE_Fortran_FLAGS_TESTING       -O2
+    CMAKE_INSTALL_PREFIX             /opt/my_dssat-pdi
+    PDI_DIR                          /opt/pdi/share/pdi/cmake
+    paraconf_DIR                     /opt/pdi/share/paraconf/cmake
+
+`make` builds the project flawlessly, once avoided the default static
+linkage (apparently PDI is built as a shared/dynamic library
+exclusively).
+
+`make install` gets my custom DSSAT-CSM-OS installed in
+/opt/my_dssat-pdi.
+
+Before using DSSAT, we need some data! Just clone this repo:
+https://github.com/DSSAT/dssat-csm-data
+
+I have no idea where to put it to be able to execute DSSAT
+experiments. I run DSSAT using the wrapper `run_dssat` in `Utilities`
+and I tried different locations and both relative and absolute paths
+in the invocation with no success:
+
+    ./run_dssat C dssat-csm-data/Maize/UFGA8201.MZX 1
+
+So in the end I copy the files DSSAT needs for the experiment in
+`Utilities` to make it work... ¯\_(ツ)_/¯
+
+    cp ./dssat-csm-data/Maize/UFGA8201.MZX .
+    cp ./dssat-csm-data/Weather/UFGA8201.WTH .
+    cp ./dssat-csm-data/Soil/SOIL.SOL .
+
+that way a simple
+
+    ./run_dssat C UFGA8201.MZX 1
+
+just works and returns the expected DSSAT output, preceded by some PDI
+stuff (Initialization, debugging messages, etc.) along with some
+Fortran prints of the variables exposed to PDI:
+
+    [...] PDI stuff [...]
+
+    RUN    TRT FLO MAT TOPWT HARWT  RAIN  TIRR   CET  PESW  TNUP  TNLF   TSON TSOC
+               dap dap kg/ha kg/ha    mm    mm    mm    mm kg/ha kg/ha  kg/ha t/ha
+      1 MZ   1  76 127  6433  2020   661    13   348   144   102    54   8662   87
+
+Ah, I also need to copy the YAML file with the PDI Specification tree to
+the `Utilities` directory:
+
+    cp ../Coupling/dssat-pdi.yml .
+
+So far... so good (sort of).
+
+To complete the first part of my proof of concept I want to be able to
+access DSSAT contents from Python through PDI, though. I am not
+succeeding with that for the moment, using the `on_data` pattern in
+the `pycall` plugin :-/
+
+This simple test I can manage to work in a simple Fortran program +
+PDI (even accessing real data, not just a Hello World like here):
+
+    pycall:
+      on_data:
+        nfert: print('Hello World from Python!')
+
+breaks with what seems a Fortran exception:
+
+    % PYTHONPATH=/opt/pdi/lib/python3/dist-packages ./run_dssat C UFGA8201.MZX 1
+    [PDI][Trace-plugin] *** info: Welcome!
+    [PDI][15:52:00] *** debug: Metadata is not defined in specification tree
+    [PDI][15:52:00] *** info: Initialization successful
+     DSSAT->NFERT val:            3
+     DSSAT->IFERI val: R
+
+    Program received signal SIGFPE: Floating-point exception - erroneous arithmetic operation.
+
 # dssat-csm-os
 DSSAT Cropping System Model
 
