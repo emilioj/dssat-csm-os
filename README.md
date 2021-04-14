@@ -77,6 +77,12 @@ breaks with what seems a Fortran exception:
 
     Program received signal SIGFPE: Floating-point exception - erroneous arithmetic operation.
 
+After some struggling I found that the compiler flag
+`-ffpe-trap=overflow` was causing the issue... :-?  (apparently, the
+issue only arises when the source file that calls PDI_Init/PD_Finalize
+is compiled with that flag).
+
+
 # dssat-csm-os
 DSSAT Cropping System Model
 

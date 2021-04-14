@@ -8,3 +8,8 @@ data:
 
 plugins:
   trace: ~
+  pycall:
+    on_data:
+        nfert: print('PDI->NFERT val:', nfert)
+        iferi: print('PDI->IFERI val:', iferi)
+        hasn: print('PDI->HASN val:', hasn)
