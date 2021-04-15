@@ -5,6 +5,7 @@ data:
   nfert: int
   iferi: char
   hasn: logical
+  proof: int
 
 plugins:
   trace: ~
@@ -13,3 +14,7 @@ plugins:
         nfert: print('PDI->NFERT val:', nfert)
         iferi: print('PDI->IFERI val:', iferi)
         hasn: print('PDI->HASN val:', hasn)
+        proof: |
+          print('Python prev. value:', proof, ' type:', type(proof))
+          proof[()]=42
+          print('Python post. value:', proof, ' type:', type(proof))

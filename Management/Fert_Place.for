@@ -106,6 +106,8 @@ C=======================================================================
 
       DATA FIRST /.TRUE./
 
+      INTEGER MYPROOF
+
 !-----------------------------------------------------------------------
 
       IFERI = ISWITCH % IFERI
@@ -355,10 +357,16 @@ C-----------------------------------------------------------------------
         NIDATA % NIEND = YRDOY
       ENDIF
 
+      MYPROOF=NFERT             !EJPG TMP
+      print * , 'DSSAT->MyProof prev. val: ', MYPROOF ! EJPG TMP
+      CALL PDI_expose("proof", MYPROOF, PDI_INOUT) ! EJPG TMP
+
       print * , 'DSSAT->NFERT val: ', NFERT ! EJPG TMP
       print * , 'DSSAT->IFERI val: ', IFERI ! EJPG TMP
       CALL PDI_expose("nfert", NFERT, PDI_OUT) ! EJPG: test PDI data exposure
       CALL PDI_expose("iferi", IFERI, PDI_OUT) ! EJPG: test PDI data exposure
+
+      print * , 'DSSAT->MyProof post. val: ', MYPROOF ! EJPG TMP
 
       FertLoop: DO I = 1, NFERT
         FERTILIZE_TODAY = .FALSE.
