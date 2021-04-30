@@ -62,6 +62,7 @@
 
       USE ModuleDefs
       USE Interface_SenLig_Ceres
+      USE pdi
       IMPLICIT  NONE
       SAVE
 !----------------------------------------------------------------------
@@ -1042,6 +1043,9 @@ C-GH 60     FORMAT(25X,F5.2,13X,F5.2,7X,F5.2)
               NDEF3 = 1.0
               NFAC = 1.0
           ENDIF
+
+          print * , 'DSSAT->NSTRES val: ', NSTRES ! EJPG TMP
+          CALL PDI_expose("nstd", NSTRES, PDI_OUT) ! EJPG: test PDI data exposure
 
           !-------------------------------------------------------------
           !      Compute Water Stress Factors       

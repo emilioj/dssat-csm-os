@@ -6,11 +6,13 @@ data:
   iferi: char
   hasn: logical
   proof: int
+  nstd: float
 
 plugins:
   trace: ~
   pycall:
     on_data:
+        nstd: print('PDI->NSTD val:', nstd)
         nfert: print('PDI->NFERT val:', nfert)
         iferi: print('PDI->IFERI val:', iferi)
         hasn: print('PDI->HASN val:', hasn)
