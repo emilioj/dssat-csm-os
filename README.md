@@ -54,6 +54,15 @@ the `Utilities` directory:
 
 So far... so good (sort of).
 
+Last detail: if you obtain a `ModuleNotFoundError: No module named 'pdi'`
+you need to indicate where the pdi module for Python can be found in your
+system, e.g.
+
+    % PYTHONPATH=/opt/pdi/lib/python3/dist-packages ./run_dssat C UFGA8201.MZX 1
+
+
+## Solved issue with PDI
+
 To complete the first part of my proof of concept I want to be able to
 access DSSAT contents from Python through PDI, though. I am not
 succeeding with that for the moment, using the `on_data` pattern in
